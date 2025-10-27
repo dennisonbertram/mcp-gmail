@@ -14,27 +14,27 @@ This MCP server enables AI assistants like Claude to interact with Gmail on your
 ### 17 Gmail Tools Organized by Category
 
 #### Essential Tools (Email Core)
-- **gmail_list_messages** - List messages with filters (labels, queries)
-- **gmail_read_message** - Read full message content with multiple format options
-- **gmail_search_messages** - Advanced search using Gmail query syntax
-- **gmail_send_email** - Send emails with HTML support, CC/BCC, and attachments
+- **listMessages** - List messages with filters (labels, queries)
+- **getMessage** - Read full message content with multiple format options
+- **searchMessages** - Advanced search using Gmail query syntax
+- **sendEmail** - Send emails with HTML support, CC/BCC, and attachments
 
 #### Standard Tools (Email Management)
-- **gmail_get_thread** - Retrieve complete conversation threads
-- **gmail_create_draft** - Create email drafts for later editing
-- **gmail_send_draft** - Send previously created drafts
-- **gmail_modify_message** - Modify message labels (read/unread, star, archive)
-- **gmail_list_labels** - List all system and custom labels
-- **gmail_create_label** - Create custom labels with colors
-- **gmail_get_attachment** - Download and save email attachments
+- **getThread** - Retrieve complete conversation threads
+- **createDraft** - Create email drafts for later editing
+- **sendDraft** - Send previously created drafts
+- **modifyMessage** - Modify message labels (read/unread, star, archive)
+- **listLabels** - List all system and custom labels
+- **createLabel** - Create custom labels with colors
+- **getAttachment** - Download and save email attachments
 
 #### Advanced Tools (Automation & Settings)
-- **gmail_list_filters** - List all email filters
-- **gmail_create_filter** - Create automated email filters
-- **gmail_get_settings** - Retrieve account settings
-- **gmail_update_signature** - Update email signature
-- **gmail_set_vacation** - Configure vacation/auto-reply settings
-- **gmail_batch_modify** - Bulk modify up to 1000 messages at once
+- **listFilters** - List all email filters
+- **createFilter** - Create automated email filters
+- **getSettings** - Retrieve account settings
+- **updateSignature** - Update email signature
+- **setVacationResponder** - Configure vacation/auto-reply settings
+- **batchModify** - Bulk modify up to 1000 messages at once
 
 ## Prerequisites
 
@@ -77,7 +77,7 @@ npm run build
    - Download the JSON file
 6. Save as `credentials.json` in the project root
 
-**Need help?** See [AUTHENTICATION_GUIDE.md](./AUTHENTICATION_GUIDE.md) for detailed setup instructions with screenshots and troubleshooting.
+**Need help?** See [AUTHENTICATION_GUIDE.md](./docs/AUTHENTICATION_GUIDE.md) for detailed setup instructions with screenshots and troubleshooting.
 
 ### 4. Authenticate with Gmail
 
@@ -357,16 +357,13 @@ mcp-gmail/
 ## Documentation
 
 ### Getting Started
-- **[QUICKSTART.md](./QUICKSTART.md)** - 5-minute setup guide
-- **[AUTHENTICATION_GUIDE.md](./AUTHENTICATION_GUIDE.md)** - Comprehensive OAuth 2.0 setup guide with troubleshooting
+- **[QUICKSTART.md](./docs/QUICKSTART.md)** - 5-minute setup guide
+- **[AUTHENTICATION_GUIDE.md](./docs/AUTHENTICATION_GUIDE.md)** - Comprehensive OAuth 2.0 setup guide with troubleshooting
 
 ### Technical Documentation
-- **[LOGIN_FLOW.md](./LOGIN_FLOW.md)** - Technical deep-dive into authentication flow and token management
-- **[TOOLS_REFERENCE.md](./TOOLS_REFERENCE.md)** - Complete documentation for all 17 Gmail tools
-- **[SETUP_SUMMARY.md](./SETUP_SUMMARY.md)** - Architecture and implementation details
-
-### Legacy Documentation
-- **[AUTHENTICATION.md](./AUTHENTICATION.md)** - Original authentication documentation (see AUTHENTICATION_GUIDE.md for latest)
+- **[LOGIN_FLOW.md](./docs/LOGIN_FLOW.md)** - Technical deep-dive into authentication flow and token management
+- **[TOOLS_REFERENCE.md](./docs/TOOLS_REFERENCE.md)** - Complete documentation for all 17 Gmail tools
+- **[PROJECT_SUMMARY.md](./docs/PROJECT_SUMMARY.md)** - Architecture and implementation details
 
 ## Troubleshooting
 
