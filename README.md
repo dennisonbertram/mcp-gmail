@@ -1,529 +1,261 @@
 # Gmail MCP Server
 
-A comprehensive Model Context Protocol (MCP) server that provides AI assistants with full access to Gmail functionality through 17 powerful tools.
+A Model Context Protocol (MCP) server providing AI assistants with comprehensive Gmail access through 17 powerful tools.
 
-## Overview
-
-This MCP server enables AI assistants like Claude to interact with Gmail on your behalf, providing capabilities ranging from reading and sending emails to managing labels, filters, and account settings. Built with TypeScript and the mcp-framework, it offers secure OAuth 2.0 authentication with automatic token refresh.
+[![MCP](https://img.shields.io/badge/MCP-1.20.2-blue)](https://github.com/modelcontextprotocol)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ## Features
 
-### MCP Resources
-- **Authentication Status Resource** - Provides real-time authentication status and setup instructions to LLMs
-
-### 17 Gmail Tools Organized by Category
-
-#### Essential Tools (Email Core)
-- **listMessages** - List messages with filters (labels, queries)
-- **getMessage** - Read full message content with multiple format options
-- **searchMessages** - Advanced search using Gmail query syntax
-- **sendEmail** - Send emails with HTML support, CC/BCC, and attachments
-
-#### Standard Tools (Email Management)
-- **getThread** - Retrieve complete conversation threads
-- **createDraft** - Create email drafts for later editing
-- **sendDraft** - Send previously created drafts
-- **modifyMessage** - Modify message labels (read/unread, star, archive)
-- **listLabels** - List all system and custom labels
-- **createLabel** - Create custom labels with colors
-- **getAttachment** - Download and save email attachments
-
-#### Advanced Tools (Automation & Settings)
-- **listFilters** - List all email filters
-- **createFilter** - Create automated email filters
-- **getSettings** - Retrieve account settings
-- **updateSignature** - Update email signature
-- **setVacationResponder** - Configure vacation/auto-reply settings
-- **batchModify** - Bulk modify up to 1000 messages at once
-
-## Prerequisites
-
-- **Node.js 18+** - Required runtime environment
-- **Google Cloud Project** - Free to create at [console.cloud.google.com](https://console.cloud.google.com/)
-- **Gmail API Enabled** - Must be enabled in your Google Cloud project
-- **OAuth 2.0 Credentials** - Desktop app credentials from Google Cloud Console
+- **17 Gmail Tools**: Send, read, search, manage emails, drafts, labels, filters, and settings
+- **Secure OAuth 2.0**: Google authentication with automatic token refresh
+- **MCP Resource**: Real-time authentication status for intelligent LLM interactions
+- **Full TypeScript**: Type-safe with Zod schema validation
+- **Production Ready**: Comprehensive error handling and Gmail API best practices
 
 ## Quick Start
 
-Get up and running in 5 minutes:
-
-### 1. Install Dependencies
+### 1. Install
 
 ```bash
 npm install
-```
-
-### 2. Build the Project
-
-```bash
 npm run build
 ```
 
-### 3. Set Up Google OAuth Credentials
+### 2. Set Up Google OAuth
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project (or select existing)
-3. Enable the Gmail API:
-   - Navigate to "APIs & Services" > "Library"
-   - Search for "Gmail API" and click "Enable"
-4. Configure OAuth consent screen:
-   - Choose "External" user type
-   - Fill in app information
-   - Add yourself as a test user
-5. Create OAuth credentials:
-   - Go to "APIs & Services" > "Credentials"
-   - Click "Create Credentials" > "OAuth client ID"
-   - Choose "Desktop app" as application type
-   - Download the JSON file
-6. Save as `credentials.json` in the project root
+2. Create a project and enable the **Gmail API**
+3. Create **OAuth 2.0 credentials** (Desktop app type)
+4. Download and save as `credentials.json` in project root
 
-**Need help?** See [AUTHENTICATION_GUIDE.md](./docs/AUTHENTICATION_GUIDE.md) for detailed setup instructions with screenshots and troubleshooting.
+📖 **Detailed setup**: See [docs/AUTHENTICATION_GUIDE.md](./docs/AUTHENTICATION_GUIDE.md)
 
-### 4. Authenticate with Gmail
-
-**Important:** Run this command before starting the MCP server:
+### 3. Authenticate
 
 ```bash
 npm run auth
 ```
 
-This will:
-- Open your browser for Google sign-in
-- Request Gmail permissions
-- Save your authentication token to `.credentials/token.json`
-- Verify Gmail API access
+This opens your browser to authenticate with Google and saves the token.
 
-**First-time authentication is required!** The MCP server cannot access Gmail without this step.
+### 4. Configure MCP Client
 
-After successful authentication, you'll see:
-```
-✅ Authentication complete!
-Your token has been saved to .credentials/token.json
-You can now start the MCP server with: npm start
-```
-
-**Authentication happens once.** The token is automatically refreshed, so you won't need to authenticate again unless you revoke access.
-
-### 5. Configure Your MCP Client
-
-Add to your MCP client configuration (e.g., Claude Desktop):
+Add to your MCP client (e.g., Claude Desktop config):
 
 ```json
 {
   "mcpServers": {
     "gmail": {
       "command": "node",
-      "args": ["/absolute/path/to/mcp-gmail/dist/index.js"],
-      "env": {}
+      "args": ["/absolute/path/to/mcp-gmail/dist/index.js"]
     }
   }
 }
 ```
 
-## Configuration
-
-### Option 1: Credentials File (Recommended for Development)
-
-Place `credentials.json` in the project root:
-
+Or use the bin command after `npm link`:
 ```json
 {
-  "installed": {
-    "client_id": "your-client-id.apps.googleusercontent.com",
-    "client_secret": "your-client-secret",
-    "redirect_uris": ["http://localhost:3000/oauth2callback"]
+  "mcpServers": {
+    "gmail": {
+      "command": "mcp-gmail"
+    }
   }
 }
 ```
 
-### Option 2: Environment Variables (Recommended for Production)
+## Available Tools
 
-```bash
-export GOOGLE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
-export GOOGLE_CLIENT_SECRET="your-client-secret"
-export GOOGLE_REDIRECT_URI="http://localhost:3000/oauth2callback"
-```
+### Essential Tools
+- **sendEmail** - Send emails with HTML, CC/BCC, and attachments
+- **searchMessages** - Search using Gmail query syntax
+- **listMessages** - List messages with filters
+- **getMessage** - Read full message content
 
-Or create a `.env` file (see `.env.example`):
+### Email Management
+- **getThread** - Get conversation threads
+- **createDraft** / **sendDraft** - Draft management
+- **modifyMessage** - Change labels (read/unread, star, archive)
+- **batchModify** - Bulk operations (up to 1000 messages)
+- **getAttachment** - Download attachments
 
-```bash
-GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-client-secret
-GOOGLE_REDIRECT_URI=http://localhost:3000/oauth2callback
-```
+### Organization
+- **listLabels** / **createLabel** - Label management
+- **listFilters** / **createFilter** - Email filter automation
+
+### Settings
+- **getSettings** - Account settings
+- **updateSignature** - Email signature
+- **setVacationResponder** - Auto-reply configuration
+
+📖 **Full reference**: [docs/TOOLS_REFERENCE.md](./docs/TOOLS_REFERENCE.md)
 
 ## Usage Examples
 
-### Common Workflows
-
-#### Read Recent Emails
+### Search and Read Emails
 
 ```typescript
-// List 10 most recent unread emails
-gmail_list_messages({
-  maxResults: 10,
-  labelIds: ["UNREAD"]
-})
+// Search for emails
+await searchMessages({
+  query: "from:example@gmail.com is:unread",
+  maxResults: 10
+});
 
-// Read a specific message
-gmail_read_message({
-  messageId: "18f2d3e4b5c6a7d8",
-  format: "simple"
-})
+// Read a message
+await getMessage({
+  messageId: "abc123",
+  format: "full"
+});
 ```
 
-#### Search for Emails
+### Send Email
 
 ```typescript
-// Find emails from a specific sender
-gmail_search_messages({
-  query: "from:example@gmail.com",
-  maxResults: 20
-})
-
-// Find unread emails with attachments
-gmail_search_messages({
-  query: "is:unread has:attachment",
-  includeBody: true
-})
-
-// Find emails in date range
-gmail_search_messages({
-  query: "after:2024/01/01 before:2024/12/31 subject:invoice"
-})
-```
-
-#### Send Emails
-
-```typescript
-// Send a simple email
-gmail_send_email({
+await sendEmail({
   to: "recipient@example.com",
-  subject: "Hello from Gmail MCP",
-  body: "This is a test email sent via the Gmail MCP server."
-})
-
-// Send HTML email with CC and attachments
-gmail_send_email({
-  to: "recipient@example.com",
-  cc: "cc@example.com",
-  subject: "Report with Attachments",
-  body: "<h1>Monthly Report</h1><p>Please see attached files.</p>",
+  subject: "Hello",
+  body: "<h1>Test</h1><p>Email body</p>",
   isHtml: true,
   attachments: [
-    { filename: "report.pdf", path: "/path/to/report.pdf" }
+    { filename: "report.pdf", path: "/path/to/file.pdf" }
   ]
-})
+});
 ```
 
-#### Manage Messages
+### Manage Messages
 
 ```typescript
-// Mark message as read
-gmail_modify_message({
-  messageId: "18f2d3e4b5c6a7d8",
-  removeLabelIds: ["UNREAD"]
-})
-
-// Archive and star a message
-gmail_modify_message({
-  messageId: "18f2d3e4b5c6a7d8",
+// Mark as read and archive
+await modifyMessage({
+  messageId: "abc123",
   addLabelIds: ["STARRED"],
-  removeLabelIds: ["INBOX"]
-})
+  removeLabelIds: ["UNREAD", "INBOX"]
+});
 
-// Bulk archive 100 messages
-gmail_batch_modify({
-  messageIds: ["id1", "id2", "id3", ...],
+// Bulk archive
+await batchModify({
+  messageIds: ["id1", "id2", "id3"],
   removeLabelIds: ["INBOX"]
-})
+});
 ```
 
-#### Work with Drafts
+## Authentication Resource
 
-```typescript
-// Create a draft
-gmail_create_draft({
-  to: "recipient@example.com",
-  subject: "Draft Email",
-  body: "This will be saved as a draft."
-})
+The server provides `gmail://auth-status` resource that LLMs can read to:
+- Check authentication status before operations
+- Guide users through setup
+- Provide context-aware troubleshooting
 
-// Send the draft later
-gmail_send_draft({
-  draftId: "r-1234567890"
-})
-```
-
-## Available Tools Summary
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `gmail_list_messages` | List messages with filters | `maxResults`, `query`, `labelIds` |
-| `gmail_read_message` | Read full message content | `messageId`, `format` |
-| `gmail_search_messages` | Search using Gmail syntax | `query`, `maxResults`, `includeBody` |
-| `gmail_send_email` | Send email with attachments | `to`, `subject`, `body`, `attachments` |
-| `gmail_get_thread` | Get conversation thread | `threadId` |
-| `gmail_create_draft` | Create email draft | `to`, `subject`, `body` |
-| `gmail_send_draft` | Send draft | `draftId` |
-| `gmail_modify_message` | Modify message labels | `messageId`, `addLabelIds`, `removeLabelIds` |
-| `gmail_list_labels` | List all labels | None |
-| `gmail_create_label` | Create custom label | `name`, `color` |
-| `gmail_get_attachment` | Download attachment | `messageId`, `attachmentId`, `outputPath` |
-| `gmail_list_filters` | List email filters | None |
-| `gmail_create_filter` | Create email filter | `criteria`, `action` |
-| `gmail_get_settings` | Get account settings | None |
-| `gmail_update_signature` | Update signature | `signature`, `sendAsEmail` |
-| `gmail_set_vacation` | Set vacation responder | `enableAutoReply`, `responseSubject`, `responseBodyPlainText` |
-| `gmail_batch_modify` | Bulk modify messages | `messageIds`, `addLabelIds`, `removeLabelIds` |
-
-For detailed tool documentation, see [TOOLS_REFERENCE.md](./TOOLS_REFERENCE.md).
-
-## MCP Resources
-
-### Authentication Status Resource
-
-This server provides an MCP resource that gives LLMs contextual information about authentication status:
-
-**Resource URI**: `gmail://auth-status`
-**MIME Type**: `text/markdown`
-**Description**: Real-time authentication status and setup instructions
-
-The resource automatically detects your authentication state and provides:
-
-- **✅ Authenticated**: Confirms successful authentication, shows the authenticated email address, and lists all available tools
-- **⚠️ Not Authenticated**: Provides step-by-step instructions to run `npm run auth` and complete OAuth flow
-- **❌ Not Configured**: Guides you through creating Google Cloud credentials and initial setup
-
-#### Why This Matters
-
-MCP resources provide contextual information to LLMs, enabling them to:
-- Proactively check if authentication is needed before attempting tool operations
-- Guide users through setup without trial-and-error
-- Provide accurate troubleshooting steps based on actual authentication state
-- Understand what tools are available once authenticated
-
-#### How LLMs Use This Resource
-
-When an MCP client (like Claude Desktop) connects to this server, the LLM can read the `gmail://auth-status` resource to understand the current state. For example:
-
-- **Before attempting to send email**: Check if authenticated
-- **When user asks "Can you access my Gmail?"**: Read the resource to give accurate status
-- **After authentication errors**: Consult the resource for troubleshooting guidance
-
-The resource is automatically available to all MCP clients - no configuration needed!
-
-## Architecture
-
-### Project Structure
+## Project Structure
 
 ```
 mcp-gmail/
 ├── src/
-│   ├── auth/              # OAuth 2.0 authentication
-│   │   ├── gmail-auth.ts  # Main auth manager
-│   │   ├── config.ts      # Config loader
-│   │   ├── index.ts       # Public exports
-│   │   └── example.ts     # Auth test example
-│   ├── tools/             # 17 Gmail MCP tools
-│   │   ├── send-email.ts
-│   │   ├── list-messages.ts
-│   │   ├── search-messages.ts
-│   │   └── ...            # 14 more tools
-│   ├── resources/         # MCP resources
-│   │   └── auth-status.ts # Authentication status resource
-│   ├── utils/             # Shared utilities
-│   │   ├── mime-builder.ts    # MIME message builder
-│   │   ├── message-parser.ts  # Message parser
-│   │   ├── attachment.ts      # Attachment handler
-│   │   └── error-handler.ts   # Error handler
-│   └── index.ts           # MCP server entry point
-├── dist/                  # Compiled JavaScript (gitignored)
-├── .credentials/          # OAuth tokens (gitignored)
-│   └── token.json         # Refresh token storage
-├── credentials.json       # OAuth credentials (gitignored)
-├── package.json           # Project metadata
-└── tsconfig.json          # TypeScript config
+│   ├── tools/              # 17 Gmail tools
+│   ├── resources/          # MCP resources (auth-status)
+│   ├── auth/               # OAuth 2.0 flow
+│   └── utils/              # MIME builder, parsers, error handling
+├── docs/                   # Documentation
+├── scripts/                # Utility scripts
+└── dist/                   # Compiled output
 ```
 
-### Key Components
+## Configuration
 
-- **MCP Framework**: Built on `mcp-framework` for standardized tool definitions
-- **Gmail API**: Uses official `googleapis` library
-- **OAuth 2.0**: Secure authentication with token persistence and auto-refresh
-- **TypeScript**: Full type safety and modern JavaScript features
-- **Zod Schemas**: Runtime validation for all tool inputs
+### Credentials File (Development)
 
-## Documentation
-
-### Getting Started
-- **[QUICKSTART.md](./docs/QUICKSTART.md)** - 5-minute setup guide
-- **[AUTHENTICATION_GUIDE.md](./docs/AUTHENTICATION_GUIDE.md)** - Comprehensive OAuth 2.0 setup guide with troubleshooting
-
-### Technical Documentation
-- **[LOGIN_FLOW.md](./docs/LOGIN_FLOW.md)** - Technical deep-dive into authentication flow and token management
-- **[TOOLS_REFERENCE.md](./docs/TOOLS_REFERENCE.md)** - Complete documentation for all 17 Gmail tools
-- **[PROJECT_SUMMARY.md](./docs/PROJECT_SUMMARY.md)** - Architecture and implementation details
-
-## Troubleshooting
-
-### "Gmail OAuth credentials not configured!"
-
-**Solution**: Ensure `credentials.json` exists in the project root, or set environment variables:
-```bash
-export GOOGLE_CLIENT_ID="your-client-id"
-export GOOGLE_CLIENT_SECRET="your-client-secret"
-export GOOGLE_REDIRECT_URI="http://localhost:3000/oauth2callback"
-```
-
-### "Access blocked: This app's request is invalid"
-
-**Solution**:
-1. Go to OAuth consent screen in Google Cloud Console
-2. Add yourself as a test user under "Test users"
-3. Verify Gmail API is enabled in "APIs & Services" > "Library"
-
-### Token Expired or Invalid
-
-**Solution**: Delete and re-authenticate:
-```bash
-rm .credentials/token.json
-node dist/auth/example.js
-```
-
-### Port 3000 Already in Use
-
-**Solution**: The OAuth callback uses port 3000. If occupied:
-1. Stop the service using port 3000, or
-2. Change the redirect URI in both Google Cloud Console and your credentials
-
-### Permission Denied Errors
-
-**Solution**: Ensure your OAuth consent screen has the required scopes:
-- `https://www.googleapis.com/auth/gmail.modify` - Read, compose, send, and modify emails
-- `https://www.googleapis.com/auth/gmail.settings.basic` - Manage basic settings
-
-### Rate Limiting
-
-Gmail API has usage quotas. If you hit rate limits:
-- Wait a few minutes before retrying
-- Reduce the frequency of requests
-- Check your quota in Google Cloud Console
-- Request quota increases if needed for production use
-
-## Development
-
-### Build
-
-```bash
-npm run build
-```
-
-### Test
-
-```bash
-npm test
-```
-
-### Validate MCP
-
-```bash
-mcp validate
-```
-
-### Create Custom Tools
-
-1. Create a new file in `src/tools/`:
-
-```typescript
-import { MCPTool, MCPInput } from "mcp-framework";
-import { z } from "zod";
-import { createGmailAuth } from "../auth/index.js";
-
-const MyToolSchema = z.object({
-  param: z.string().describe("Parameter description")
-});
-
-export default class MyTool extends MCPTool {
-  name = "gmail_my_tool";
-  description = "Tool description";
-  schema = MyToolSchema;
-
-  async execute(input: MCPInput<this>) {
-    const authManager = createGmailAuth();
-    const gmail = await authManager.getGmailClient();
-
-    // Your implementation
+```json
+{
+  "installed": {
+    "client_id": "YOUR_CLIENT_ID.apps.googleusercontent.com",
+    "client_secret": "YOUR_CLIENT_SECRET",
+    "redirect_uris": ["http://localhost"]
   }
 }
 ```
 
-2. Rebuild: `npm run build`
-3. The tool is automatically discovered and registered
+### Environment Variables (Production)
+
+```bash
+export GOOGLE_CLIENT_ID="YOUR_CLIENT_ID"
+export GOOGLE_CLIENT_SECRET="YOUR_CLIENT_SECRET"
+export GOOGLE_REDIRECT_URI="http://localhost"
+```
+
+## Troubleshooting
+
+### "OAuth credentials not configured"
+- Ensure `credentials.json` exists in project root
+- Or set environment variables (see Configuration)
+
+### "Access blocked: This app's request is invalid"
+- Add yourself as test user in OAuth consent screen
+- Verify Gmail API is enabled
+
+### Token errors
+```bash
+rm .credentials/token.json
+npm run auth
+```
+
+📖 **More help**: [docs/AUTHENTICATION_GUIDE.md](./docs/AUTHENTICATION_GUIDE.md)
+
+## Documentation
+
+- **[QUICKSTART.md](./docs/QUICKSTART.md)** - 5-minute setup guide
+- **[AUTHENTICATION_GUIDE.md](./docs/AUTHENTICATION_GUIDE.md)** - OAuth setup with screenshots
+- **[TOOLS_REFERENCE.md](./docs/TOOLS_REFERENCE.md)** - Complete API reference
+- **[LOGIN_FLOW.md](./docs/LOGIN_FLOW.md)** - Technical authentication deep-dive
+
+## Development
+
+```bash
+# Build
+npm run build
+
+# Test
+npm test
+
+# Validate MCP
+mcp validate
+
+# Lint
+npm run lint
+```
 
 ## Security
 
-- OAuth tokens stored in `.credentials/` directory (gitignored)
-- Credentials never committed to version control
-- Automatic token refresh prevents expiration
-- Fine-grained OAuth scopes limit access
-- All API calls use authenticated Gmail client
+- OAuth tokens stored in `.credentials/` (gitignored)
+- Automatic token refresh
+- Fine-grained OAuth scopes
+- Never commit `credentials.json`
 
-### Security Best Practices
+## API Limits
 
-1. Never commit `credentials.json` or `.credentials/` directory
-2. Use environment variables in production environments
-3. Regularly review granted permissions in Google Account settings
-4. Use test users during development
-5. Request only the minimum required OAuth scopes
-
-## Gmail API Quotas
-
-Be aware of Gmail API usage limits:
-- **250 quota units/user/second**
-- **1,000,000,000 quota units/day** (per project)
-- Most operations cost 5-25 units
-- Batch operations are more efficient
-
-Monitor usage in Google Cloud Console under "APIs & Services" > "Dashboard".
+Gmail API quotas:
+- 250 quota units/user/second
+- 1B quota units/day
+- Monitor in Google Cloud Console
 
 ## Contributing
 
-Contributions welcome! Please:
-
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Commit changes: `git commit -am 'Add new feature'`
-4. Push to branch: `git push origin feature/my-feature`
-5. Submit a pull request
-
-### Development Guidelines
-
-- Follow existing code style and structure
-- Add tests for new features
-- Update documentation as needed
-- Use TypeScript strict mode
-- Validate with `mcp validate` before submitting
+2. Create a feature branch
+3. Add tests and documentation
+4. Submit a pull request
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License
 
-## Support
+## Links
 
-- **Gmail API Documentation**: https://developers.google.com/gmail/api
-- **MCP Framework**: https://github.com/modelcontextprotocol/framework
-- **Google OAuth 2.0**: https://developers.google.com/identity/protocols/oauth2
-- **Issues**: Open an issue in the repository
-
-## Acknowledgments
-
-Built with:
-- [mcp-framework](https://github.com/modelcontextprotocol/framework) - MCP server framework
-- [googleapis](https://github.com/googleapis/google-api-nodejs-client) - Official Google APIs client
-- [Zod](https://github.com/colinhacks/zod) - Schema validation
-- [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
+- **Gmail API**: https://developers.google.com/gmail/api
+- **MCP Protocol**: https://modelcontextprotocol.io
+- **Issues**: https://github.com/dennisonbertram/mcp-gmail/issues
 
 ---
 
-**Ready to integrate Gmail with AI?** Follow the [Quick Start](#quick-start) guide above!
+Built with [mcp-framework](https://github.com/QuantGeekDev/mcp-framework), [googleapis](https://github.com/googleapis/google-api-nodejs-client), and TypeScript.
