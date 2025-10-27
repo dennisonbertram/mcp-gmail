@@ -1,0 +1,186 @@
+
+> mcp-gmail@0.1.0 lint
+> eslint src --ext .ts
+
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/auth/config.ts
+  53:11  error  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/auth/example.ts
+   8:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  16:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  19:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  21:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  24:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  26:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  27:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  28:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  29:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  32:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  39:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  53:9  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  54:9  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  55:9  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  56:9  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  59:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  62:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  73:1  error    Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator  @typescript-eslint/no-floating-promises
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/auth/gmail-auth.ts
+   50:14  error  'error' is defined but never used                                                  @typescript-eslint/no-unused-vars
+   87:16  error  'error' is defined but never used                                                  @typescript-eslint/no-unused-vars
+  129:14  error  This assertion is unnecessary since it does not change the type of the expression  @typescript-eslint/no-unnecessary-type-assertion
+  134:16  error  'error' is defined but never used                                                  @typescript-eslint/no-unused-vars
+  173:14  error  'error' is defined but never used                                                  @typescript-eslint/no-unused-vars
+  186:16  error  'error' is defined but never used                                                  @typescript-eslint/no-unused-vars
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/cli/authenticate.ts
+  16:19  error    'resolve' is defined but never used. Allowed unused vars must match /^_/u                                                                                           @typescript-eslint/no-unused-vars
+  21:1   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  22:1   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  23:1   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  30:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  36:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  37:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  41:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  42:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  43:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  44:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  46:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  47:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  48:5   warning  Unexpected console statement. Only these console methods are allowed: warn, error                                                                                   no-console
+  75:1   error    Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator  @typescript-eslint/no-floating-promises
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/batch-modify.ts
+  43:26  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  48:21  error  Unsafe member access .addLabelIds on an `any` value     @typescript-eslint/no-unsafe-member-access
+  52:21  error  Unsafe member access .removeLabelIds on an `any` value  @typescript-eslint/no-unsafe-member-access
+  58:9   error  Unsafe assignment of an `any` value                     @typescript-eslint/no-unsafe-assignment
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/create-filter.ts
+  58:23  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  59:32  error  Unsafe member access .from on an `any` value            @typescript-eslint/no-unsafe-member-access
+  60:30  error  Unsafe member access .to on an `any` value              @typescript-eslint/no-unsafe-member-access
+  61:35  error  Unsafe member access .subject on an `any` value         @typescript-eslint/no-unsafe-member-access
+  62:33  error  Unsafe member access .query on an `any` value           @typescript-eslint/no-unsafe-member-access
+  63:40  error  Unsafe member access .negatedQuery on an `any` value    @typescript-eslint/no-unsafe-member-access
+  64:55  error  Unsafe member access .hasAttachment on an `any` value   @typescript-eslint/no-unsafe-member-access
+  65:54  error  Unsafe member access .excludeChats on an `any` value    @typescript-eslint/no-unsafe-member-access
+  66:46  error  Unsafe member access .size on an `any` value            @typescript-eslint/no-unsafe-member-access
+  67:42  error  Unsafe member access .sizeComparison on an `any` value  @typescript-eslint/no-unsafe-member-access
+  70:21  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  72:16  error  Unsafe member access .addLabelIds on an `any` value     @typescript-eslint/no-unsafe-member-access
+  75:16  error  Unsafe member access .removeLabelIds on an `any` value  @typescript-eslint/no-unsafe-member-access
+  77:33  error  Unsafe member access .forward on an `any` value         @typescript-eslint/no-unsafe-member-access
+  83:11  error  Unsafe assignment of an `any` value                     @typescript-eslint/no-unsafe-assignment
+  84:11  error  Unsafe assignment of an `any` value                     @typescript-eslint/no-unsafe-assignment
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/create-label.ts
+  49:26  error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  57:21  error  Unsafe member access .color on an `any` value  @typescript-eslint/no-unsafe-member-access
+  59:23  error  Unsafe member access .color on an `any` value  @typescript-eslint/no-unsafe-member-access
+  62:23  error  Unsafe member access .color on an `any` value  @typescript-eslint/no-unsafe-member-access
+  69:9   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/get-attachment.ts
+   7:45  error  'saveAttachment' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  51:38  error  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  55:20  error  Unsafe member access .body on an `any` value                                       @typescript-eslint/no-unsafe-member-access
+  56:13  error  Unsafe assignment of an `any` value                                                @typescript-eslint/no-unsafe-assignment
+  56:39  error  Unsafe member access .filename on an `any` value                                   @typescript-eslint/no-unsafe-member-access
+  57:13  error  Unsafe assignment of an `any` value                                                @typescript-eslint/no-unsafe-assignment
+  57:39  error  Unsafe member access .mimeType on an `any` value                                   @typescript-eslint/no-unsafe-member-access
+  58:13  error  Unsafe assignment of an `any` value                                                @typescript-eslint/no-unsafe-assignment
+  58:35  error  Unsafe member access .body on an `any` value                                       @typescript-eslint/no-unsafe-member-access
+  61:20  error  Unsafe member access .parts on an `any` value                                      @typescript-eslint/no-unsafe-member-access
+  61:44  error  Unsafe argument of type `any` assigned to a parameter of type `any[] | undefined`  @typescript-eslint/no-unsafe-argument
+  61:49  error  Unsafe member access .parts on an `any` value                                      @typescript-eslint/no-unsafe-member-access
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/get-settings.ts
+   17:17  error  'input' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   51:16  error  'error' is defined but never used                                        @typescript-eslint/no-unused-vars
+   88:16  error  'error' is defined but never used                                        @typescript-eslint/no-unused-vars
+  112:16  error  'error' is defined but never used                                        @typescript-eslint/no-unused-vars
+  132:16  error  'error' is defined but never used                                        @typescript-eslint/no-unused-vars
+  155:16  error  'error' is defined but never used                                        @typescript-eslint/no-unused-vars
+  174:16  error  'error' is defined but never used                                        @typescript-eslint/no-unused-vars
+  190:16  error  'error' is defined but never used                                        @typescript-eslint/no-unused-vars
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/get-thread.ts
+  7:28  error  'parseMessage' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/gmail-list-messages.example.ts
+  32:13   error  Unsafe assignment of an `any` value                       @typescript-eslint/no-unsafe-assignment
+  32:38   error  Unsafe member access .messages on an `error` typed value  @typescript-eslint/no-unsafe-member-access
+  34:20   error  Unsafe member access .length on an `any` value            @typescript-eslint/no-unsafe-member-access
+  40:9    error  Unsafe call of a(n) `any` typed value                     @typescript-eslint/no-unsafe-call
+  40:18   error  Unsafe member access .map on an `any` value               @typescript-eslint/no-unsafe-member-access
+  43:13   error  Unsafe assignment of an `any` value                       @typescript-eslint/no-unsafe-assignment
+  43:21   error  Unsafe member access .id on an `any` value                @typescript-eslint/no-unsafe-member-access
+  50:13   error  Unsafe assignment of an `any` value                       @typescript-eslint/no-unsafe-assignment
+  50:21   error  Unsafe member access .id on an `any` value                @typescript-eslint/no-unsafe-member-access
+  51:13   error  Unsafe assignment of an `any` value                       @typescript-eslint/no-unsafe-assignment
+  51:27   error  Unsafe member access .threadId on an `any` value          @typescript-eslint/no-unsafe-member-access
+  63:36   error  Unsafe member access .from on an `any` value              @typescript-eslint/no-unsafe-member-access
+  63:61   error  Unsafe member access .subject on an `any` value           @typescript-eslint/no-unsafe-member-access
+  63:86   error  Unsafe member access .date on an `any` value              @typescript-eslint/no-unsafe-member-access
+  63:106  error  Unsafe member access .id on an `any` value                @typescript-eslint/no-unsafe-member-access
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/list-filters.ts
+  17:17  error  'input' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/list-labels.ts
+  16:17  error  'input' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/list-messages.ts
+  43:25  error  Unexpected any. Specify a different type                                                                         @typescript-eslint/no-explicit-any
+  49:20  error  Unsafe member access .q on an `any` value                                                                        @typescript-eslint/no-unsafe-member-access
+  53:20  error  Unsafe member access .labelIds on an `any` value                                                                 @typescript-eslint/no-unsafe-member-access
+  57:60  error  Unsafe argument of type `any` assigned to a parameter of type `Params$Resource$Users$Messages$List | undefined`  @typescript-eslint/no-unsafe-argument
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/modify-message.ts
+   18:7   error  'SYSTEM_LABELS' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   72:13  error  'beforeLabels' is assigned a value but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+   87:13  error  Unsafe assignment of an `any` value                                                       @typescript-eslint/no-unsafe-assignment
+   87:41  error  Unsafe member access .labelIds on an `error` typed value                                  @typescript-eslint/no-unsafe-member-access
+  115:23  error  Unsafe member access .length on an `any` value                                            @typescript-eslint/no-unsafe-member-access
+  116:9   error  Unsafe call of a(n) `any` typed value                                                     @typescript-eslint/no-unsafe-call
+  116:21  error  Unsafe member access .forEach on an `any` value                                           @typescript-eslint/no-unsafe-member-access
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/search-messages.ts
+   98:23  error  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  116:18  error  Unsafe member access .body on an `any` value         @typescript-eslint/no-unsafe-member-access
+  121:18  error  Unsafe member access .attachments on an `any` value  @typescript-eslint/no-unsafe-member-access
+  129:9   error  Unsafe return of a value of type `any`               @typescript-eslint/no-unsafe-return
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/set-vacation.ts
+  38:31  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+  45:28  error  Unsafe member access .responseBodyHtml on an `any` value       @typescript-eslint/no-unsafe-member-access
+  47:28  error  Unsafe member access .responseBodyPlainText on an `any` value  @typescript-eslint/no-unsafe-member-access
+  52:28  error  Unsafe member access .responseSubject on an `any` value        @typescript-eslint/no-unsafe-member-access
+  56:28  error  Unsafe member access .startTime on an `any` value              @typescript-eslint/no-unsafe-member-access
+  60:28  error  Unsafe member access .endTime on an `any` value                @typescript-eslint/no-unsafe-member-access
+  64:28  error  Unsafe member access .restrictToContacts on an `any` value     @typescript-eslint/no-unsafe-member-access
+  68:28  error  Unsafe member access .restrictToDomain on an `any` value       @typescript-eslint/no-unsafe-member-access
+  75:9   error  Unsafe assignment of an `any` value                            @typescript-eslint/no-unsafe-assignment
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/tools/update-signature.ts
+  38:16  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/utils/error-handler.ts
+  139:9  error  Unexpected lexical declaration in case block  no-case-declarations
+  140:9  error  Unexpected lexical declaration in case block  no-case-declarations
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/utils/message-parser.ts
+  85:12  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/dennisonbertram/Develop/ModelContextProtocol/mcp-gmail/src/utils/mime-builder.ts
+  138:22  error  Unexpected any. Specify a different type                                                                               @typescript-eslint/no-explicit-any
+  152:17  error  Unsafe member access .inReplyTo on an `any` value                                                                      @typescript-eslint/no-unsafe-member-access
+  155:17  error  Unsafe member access .references on an `any` value                                                                     @typescript-eslint/no-unsafe-member-access
+  169:43  error  Unsafe argument of type `any` assigned to a parameter of type `Options & Partial<Options>`                             @typescript-eslint/no-unsafe-argument
+  188:58  error  Unsafe argument of type `any` assigned to a parameter of type `WithImplicitCoercion<ArrayBuffer | SharedArrayBuffer>`  @typescript-eslint/no-unsafe-argument
+
+✖ 136 problems (106 errors, 30 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+

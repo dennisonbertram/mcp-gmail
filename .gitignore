@@ -1,0 +1,8 @@
+node_modules/
+/dist/
+.env
+
+# OAuth credentials and tokens
+credentials.json
+.credentials/
+token.json
