@@ -5,9 +5,23 @@ import { MCPTool, MCPInput } from "mcp-framework";
 import { z } from "zod";
 import { createGmailAuth } from "../auth/index.js";
 import { handleGmailError, parseMessages } from "../utils/index.js";
+import { exportThreadToMarkdown } from "../utils/markdown-exporter.js";
 
 const GetThreadSchema = z.object({
   threadId: z.string().describe("The ID of the thread to retrieve"),
+  returnInline: z
+    .boolean()
+    .optional()
+    .describe(
+      "Return results inline instead of saving to file. Default: false (saves to markdown file)"
+    ),
+  outputDescription: z
+    .string()
+    .optional()
+    .describe(
+      "Human-readable description for the output filename (e.g., 'project-discussion'). " +
+      "If not provided, uses the thread subject."
+    ),
 });
 
 export default class GetThreadTool extends MCPTool {
@@ -21,6 +35,10 @@ export default class GetThreadTool extends MCPTool {
       const authManager = createGmailAuth();
       const gmail = await authManager.getGmailClient();
 
+      // Apply defaults
+      const returnInline = input.returnInline ?? false;
+      const outputDescription = input.outputDescription;
+
       // Get full thread with all messages
       const response = await gmail.users.threads.get({
         userId: 'me',
@@ -31,11 +49,41 @@ export default class GetThreadTool extends MCPTool {
       const thread = response.data;
 
       if (!thread.messages || thread.messages.length === 0) {
-        return `Thread ${input.threadId} found but contains no messages.`;
+        return {
+          success: true,
+          threadId: input.threadId,
+          count: 0,
+          message: `Thread ${input.threadId} found but contains no messages.`,
+        };
       }
 
       // Parse all messages in the thread
       const parsedMessages = parseMessages(thread.messages);
+
+      // Check if we should export to file (default behavior)
+      if (!returnInline) {
+        // Export to markdown file
+        const exportResult = await exportThreadToMarkdown(
+          input.threadId,
+          parsedMessages,
+          outputDescription
+        );
+
+        // If export successful, return export result
+        if (exportResult.savedToFile) {
+          return {
+            success: true,
+            savedToFile: true,
+            filePath: exportResult.filePath,
+            count: exportResult.count,
+            threadId: input.threadId,
+            format: 'markdown',
+            message: exportResult.message,
+          };
+        }
+
+        // If export failed, fall through to return inline (with warning)
+      }
 
       // Format output
       const output: string[] = [];

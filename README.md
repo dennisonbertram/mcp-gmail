@@ -9,6 +9,7 @@ A Model Context Protocol (MCP) server providing AI assistants with comprehensive
 ## Features
 
 - **17 Gmail Tools**: Send, read, search, manage emails, drafts, labels, filters, and settings
+- **Markdown Export**: Automatically saves large result sets to grep-friendly markdown files
 - **Secure OAuth 2.0**: Google authentication with automatic token refresh
 - **MCP Resource**: Real-time authentication status for intelligent LLM interactions
 - **Full TypeScript**: Type-safe with Zod schema validation
@@ -28,7 +29,9 @@ npm run build
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a project and enable the **Gmail API**
 3. Create **OAuth 2.0 credentials** (Desktop app type)
-4. Download and save as `credentials.json` in project root
+4. Download and save as `credentials.json`:
+   - **Recommended**: `~/.config/mcp-gmail/credentials.json` (works from any directory)
+   - **Alternative**: Project root (backwards compatible)
 
 📖 **Detailed setup**: See [docs/AUTHENTICATION_GUIDE.md](./docs/AUTHENTICATION_GUIDE.md)
 
@@ -38,7 +41,7 @@ npm run build
 npm run auth
 ```
 
-This opens your browser to authenticate with Google and saves the token.
+This opens your browser to authenticate with Google and saves the token to `~/.config/mcp-gmail/token.json`.
 
 ### 4. Configure MCP Client
 
@@ -141,6 +144,74 @@ await batchModify({
 });
 ```
 
+## Markdown Export Feature
+
+**By default**, `searchMessages`, `listMessages`, and `getThread` automatically save results to markdown files instead of returning data inline. This saves tokens and enables efficient parsing with grep/awk.
+
+### Default Behavior
+
+```typescript
+// Results saved to ~/.mcp-gmail/exports/search-messages/YYYY-MM-DD-description.md
+await searchMessages({
+  query: "from:boss@company.com",
+  outputDescription: "emails-from-boss"  // Optional, auto-generated if not provided
+});
+
+// Returns:
+// {
+//   success: true,
+//   savedToFile: true,
+//   filePath: "~/.mcp-gmail/exports/search-messages/2025-11-10-emails-from-boss.md",
+//   count: 247,
+//   format: "markdown"
+// }
+```
+
+### Opt-In to Inline Results
+
+Set `returnInline: true` to get results directly:
+
+```typescript
+await searchMessages({
+  query: "is:unread",
+  returnInline: true  // Get JSON response instead of file
+});
+```
+
+### Grep-Friendly Format
+
+Markdown files are structured for easy searching:
+
+```bash
+# Find all senders
+grep "^**From:**" ~/.mcp-gmail/exports/search-messages/2025-11-10-emails.md
+
+# Find emails with attachments
+grep "^**Attachments:** Yes" ~/.mcp-gmail/exports/search-messages/*.md
+
+# Count unread emails in a search
+grep "^**Labels:**.*UNREAD" ~/.mcp-gmail/exports/search-messages/2025-11-10-*.md | wc -l
+
+# Get full email by sender
+grep -A 10 "^**From:** boss@company.com" ~/.mcp-gmail/exports/search-messages/*.md
+```
+
+### Export Directory Structure
+
+```
+~/.mcp-gmail/
+  exports/
+    search-messages/
+      2025-11-10-emails-from-boss.md
+      2025-11-10-unread-urgent.md
+    list-messages/
+      2025-11-10-inbox-last-week.md
+    get-thread/
+      2025-11-10-project-discussion.md
+```
+
+**Note**: Export files contain personal email data and are automatically excluded from version control via `.gitignore`.
+
 ## Authentication Resource
 
 The server provides `gmail://auth-status` resource that LLMs can read to:
@@ -187,7 +258,7 @@ export GOOGLE_REDIRECT_URI="http://localhost"
 ## Troubleshooting
 
 ### "OAuth credentials not configured"
-- Ensure `credentials.json` exists in project root
+- Ensure `credentials.json` exists in `~/.config/mcp-gmail/` or project root
 - Or set environment variables (see Configuration)
 
 ### "Access blocked: This app's request is invalid"
@@ -196,7 +267,7 @@ export GOOGLE_REDIRECT_URI="http://localhost"
 
 ### Token errors
 ```bash
-rm .credentials/token.json
+rm ~/.config/mcp-gmail/token.json
 npm run auth
 ```
 
@@ -227,7 +298,7 @@ npm run lint
 
 ## Security
 
-- OAuth tokens stored in `.credentials/` (gitignored)
+- OAuth tokens stored in `~/.config/mcp-gmail/` (user home directory)
 - Automatic token refresh
 - Fine-grained OAuth scopes
 - Never commit `credentials.json`

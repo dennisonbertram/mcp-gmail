@@ -45,8 +45,22 @@ Lists Gmail messages with optional filters and labels.
 | `maxResults` | number | No | 10 | Maximum messages to return (1-500) |
 | `query` | string | No | - | Gmail search query (e.g., 'is:unread', 'from:example@gmail.com') |
 | `labelIds` | string[] | No | - | Filter by label IDs (e.g., ['INBOX', 'UNREAD', 'STARRED']) |
+| `returnInline` | boolean | No | false | Return results inline instead of saving to file. Default: false (saves to markdown) |
+| `outputDescription` | string | No | - | Human-readable description for the output filename (e.g., 'inbox-last-week') |
 
-**Returns**:
+**Returns (Default - Saved to File)**:
+```json
+{
+  "success": true,
+  "savedToFile": true,
+  "filePath": "~/.mcp-gmail/exports/list-messages/2025-11-10-inbox-last-week.md",
+  "count": 10,
+  "format": "markdown",
+  "message": "10 messages saved. Use grep to search or read the file."
+}
+```
+
+**Returns (When `returnInline: true`)**:
 ```json
 {
   "success": true,
@@ -71,15 +85,24 @@ Lists Gmail messages with optional filters and labels.
 **Usage Examples**:
 
 ```typescript
-// List 10 most recent messages
+// Default: Save to markdown file
 gmail_list_messages({
-  maxResults: 10
+  maxResults: 50,
+  outputDescription: "inbox-last-week"
+})
+// Returns filepath to ~/.mcp-gmail/exports/list-messages/2025-11-10-inbox-last-week.md
+
+// Get results inline instead
+gmail_list_messages({
+  maxResults: 10,
+  returnInline: true
 })
 
-// List unread messages in inbox
+// List unread messages in inbox (saved to file by default)
 gmail_list_messages({
   maxResults: 20,
-  labelIds: ["INBOX", "UNREAD"]
+  labelIds: ["INBOX", "UNREAD"],
+  outputDescription: "unread-inbox"
 })
 
 // List starred messages
@@ -90,7 +113,8 @@ gmail_list_messages({
 // Search with query
 gmail_list_messages({
   query: "from:boss@company.com",
-  maxResults: 50
+  maxResults: 50,
+  outputDescription: "emails-from-boss"
 })
 ```
 
@@ -191,8 +215,23 @@ Searches Gmail messages using Gmail's powerful query syntax.
 | `query` | string | Yes | - | Gmail search query using search operators |
 | `maxResults` | number | No | 20 | Maximum messages to return (1-500) |
 | `includeBody` | boolean | No | false | Include message body in results (slower but more detailed) |
+| `returnInline` | boolean | No | false | Return results inline instead of saving to file. Default: false (saves to markdown) |
+| `outputDescription` | string | No | - | Human-readable description for the output filename (e.g., 'emails-from-boss') |
 
-**Returns**:
+**Returns (Default - Saved to File)**:
+```json
+{
+  "success": true,
+  "savedToFile": true,
+  "filePath": "~/.mcp-gmail/exports/search-messages/2025-11-10-emails-from-boss.md",
+  "count": 5,
+  "query": "from:example@gmail.com has:attachment",
+  "format": "markdown",
+  "message": "5 messages saved. Use grep to search or read the file."
+}
+```
+
+**Returns (When `returnInline: true`)**:
 ```json
 {
   "success": true,
@@ -226,40 +265,46 @@ Searches Gmail messages using Gmail's powerful query syntax.
 **Usage Examples**:
 
 ```typescript
-// Search by sender
+// Default: Save to markdown file with custom description
 gmail_search_messages({
-  query: "from:boss@company.com"
+  query: "from:boss@company.com",
+  outputDescription: "emails-from-boss"
 })
+// Returns filepath to ~/.mcp-gmail/exports/search-messages/2025-11-10-emails-from-boss.md
 
-// Search unread emails with attachments
+// Get results inline instead of file
 gmail_search_messages({
   query: "is:unread has:attachment",
-  maxResults: 10
+  maxResults: 10,
+  returnInline: true
 })
 
-// Search by date range
+// Search by date range (auto-generates filename from query)
 gmail_search_messages({
   query: "after:2024/01/01 before:2024/12/31"
 })
 
 // Search by subject
 gmail_search_messages({
-  query: "subject:invoice"
+  query: "subject:invoice",
+  outputDescription: "invoice-emails"
 })
 
-// Complex query with multiple operators
+// Complex query with multiple operators and full body
 gmail_search_messages({
   query: "from:example@gmail.com subject:report after:2024/01/01 has:attachment",
   includeBody: true,
-  maxResults: 50
+  maxResults: 50,
+  outputDescription: "reports-from-example"
 })
 
 // Search for large emails
 gmail_search_messages({
-  query: "larger:10M"
+  query: "larger:10M",
+  outputDescription: "large-emails"
 })
 
-// Exclude specific sender
+// Exclude specific sender (results saved to file by default)
 gmail_search_messages({
   query: "to:me -from:notifications@example.com"
 })
@@ -402,13 +447,41 @@ Retrieves a complete conversation thread with all messages.
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `threadId` | string | Yes | - | The ID of the thread to retrieve |
+| `returnInline` | boolean | No | false | Return results inline instead of saving to file. Default: false (saves to markdown) |
+| `outputDescription` | string | No | - | Human-readable description for the output filename (e.g., 'project-discussion'). If not provided, uses thread subject. |
 
-**Returns**: Formatted text showing all messages in the thread with full details.
+**Returns (Default - Saved to File)**:
+```json
+{
+  "success": true,
+  "savedToFile": true,
+  "filePath": "~/.mcp-gmail/exports/get-thread/2025-11-10-project-discussion.md",
+  "count": 3,
+  "threadId": "18f2d3e4b5c6a7d8",
+  "format": "markdown",
+  "message": "Thread with 3 messages saved. Use grep to search or read the file."
+}
+```
+
+**Returns (When `returnInline: true`)**: Formatted text showing all messages in the thread with full details.
 
 **Usage Examples**:
 
 ```typescript
-// Get complete thread
+// Default: Save thread to markdown file
+gmail_get_thread({
+  threadId: "18f2d3e4b5c6a7d8",
+  outputDescription: "project-discussion"
+})
+// Returns filepath to ~/.mcp-gmail/exports/get-thread/2025-11-10-project-discussion.md
+
+// Get thread inline (text format)
+gmail_get_thread({
+  threadId: "18f2d3e4b5c6a7d8",
+  returnInline: true
+})
+
+// Save thread to file (auto-generates filename from subject)
 gmail_get_thread({
   threadId: "18f2d3e4b5c6a7d8"
 })

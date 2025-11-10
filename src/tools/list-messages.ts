@@ -6,6 +6,7 @@ import { z } from "zod";
 import { gmail_v1 } from "googleapis";
 import { createGmailAuth } from "../auth/index.js";
 import { parseMessage, handleGmailError } from "../utils/index.js";
+import { exportSearchResultsToMarkdown } from "../utils/markdown-exporter.js";
 
 const ListMessagesSchema = z.object({
   maxResults: z
@@ -23,6 +24,19 @@ const ListMessagesSchema = z.object({
     .array(z.string())
     .optional()
     .describe("Filter by label IDs (e.g., ['INBOX', 'UNREAD', 'STARRED'])"),
+  returnInline: z
+    .boolean()
+    .optional()
+    .describe(
+      "Return results inline instead of saving to file. Default: false (saves to markdown file)"
+    ),
+  outputDescription: z
+    .string()
+    .optional()
+    .describe(
+      "Human-readable description for the output filename (e.g., 'inbox-last-week'). " +
+      "If not provided, auto-generates from query/labels."
+    ),
 });
 
 export default class ListMessagesTool extends MCPTool {
@@ -40,6 +54,8 @@ export default class ListMessagesTool extends MCPTool {
 
       // Apply defaults
       const maxResults = input.maxResults ?? 10;
+      const returnInline = input.returnInline ?? false;
+      const outputDescription = input.outputDescription;
 
       // Build list parameters
       const listParams: gmail_v1.Params$Resource$Users$Messages$List = {
@@ -82,9 +98,42 @@ export default class ListMessagesTool extends MCPTool {
 
       const fullMessages = await Promise.all(messagePromises);
 
-      // Parse messages to extract key information
-      const parsedMessages = fullMessages.map((msg) => {
-        const parsed = parseMessage(msg);
+      // Parse messages to ParsedMessage objects
+      const parsedMessages = fullMessages.map((msg) => parseMessage(msg));
+
+      // Check if we should export to file (default behavior)
+      if (!returnInline) {
+        // Generate query description for export
+        const queryForExport = input.query ||
+          (input.labelIds ? `labels: ${input.labelIds.join(', ')}` : 'list-messages');
+
+        // Export to markdown file
+        const exportResult = await exportSearchResultsToMarkdown(
+          'list-messages',
+          queryForExport,
+          parsedMessages,
+          outputDescription
+        );
+
+        // If export successful, return export result
+        if (exportResult.savedToFile) {
+          return {
+            success: true,
+            savedToFile: true,
+            filePath: exportResult.filePath,
+            count: exportResult.count,
+            query: queryForExport,
+            format: 'markdown',
+            message: exportResult.message,
+          };
+        }
+
+        // If export failed, fall through to return inline (with warning)
+      }
+
+      // Return inline (either requested or export failed)
+      // Convert ParsedMessage to simplified format
+      const messageList = parsedMessages.map((parsed) => {
         return {
           id: parsed.id,
           threadId: parsed.threadId,
@@ -100,9 +149,9 @@ export default class ListMessagesTool extends MCPTool {
 
       return {
         success: true,
-        count: parsedMessages.length,
-        resultCount: `${parsedMessages.length} of ${listResponse.data.resultSizeEstimate || messages.length}`,
-        messages: parsedMessages,
+        count: messageList.length,
+        resultCount: `${messageList.length} of ${listResponse.data.resultSizeEstimate || messages.length}`,
+        messages: messageList,
       };
     } catch (error) {
       const gmailError = handleGmailError(error);

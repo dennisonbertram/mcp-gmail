@@ -42,3 +42,7 @@ coverage/
 *.tmp
 *.temp
 .cache/
+
+# MCP Gmail exports (contains personal email data)
+test-downloads/
+.mcp-gmail/

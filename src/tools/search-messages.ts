@@ -9,6 +9,7 @@ import {
   handleGmailError,
   getMessageBody,
 } from "../utils/index.js";
+import { exportSearchResultsToMarkdown } from "../utils/markdown-exporter.js";
 
 const SearchMessagesSchema = z.object({
   query: z
@@ -32,6 +33,19 @@ const SearchMessagesSchema = z.object({
     .optional()
     .describe(
       "Include message body in results (slower but more detailed). Default: false (returns only metadata)"
+    ),
+  returnInline: z
+    .boolean()
+    .optional()
+    .describe(
+      "Return results inline instead of saving to file. Default: false (saves to markdown file)"
+    ),
+  outputDescription: z
+    .string()
+    .optional()
+    .describe(
+      "Human-readable description for the output filename (e.g., 'emails-from-boss'). " +
+      "If not provided, auto-generates from query."
     ),
 });
 
@@ -75,6 +89,8 @@ export default class SearchMessagesTool extends MCPTool {
       // Apply defaults
       const maxResults = input.maxResults ?? 20;
       const includeBody = input.includeBody ?? false;
+      const returnInline = input.returnInline ?? false;
+      const outputDescription = input.outputDescription;
 
       // Search for messages using the query
       const searchResponse = await gmail.users.messages.list({
@@ -115,10 +131,38 @@ export default class SearchMessagesTool extends MCPTool {
 
       const fullMessages = await Promise.all(messagePromises);
 
-      // Parse messages
-      const parsedMessages = fullMessages.map((msg) => {
-        const parsed = parseMessage(msg);
+      // Parse messages to ParsedMessage objects
+      const parsedMessages = fullMessages.map((msg) => parseMessage(msg));
 
+      // Check if we should export to file (default behavior)
+      if (!returnInline) {
+        // Export to markdown file
+        const exportResult = await exportSearchResultsToMarkdown(
+          'search-messages',
+          input.query,
+          parsedMessages,
+          outputDescription
+        );
+
+        // If export successful, return export result
+        if (exportResult.savedToFile) {
+          return {
+            success: true,
+            savedToFile: true,
+            filePath: exportResult.filePath,
+            count: exportResult.count,
+            query: input.query,
+            format: 'markdown',
+            message: exportResult.message,
+          };
+        }
+
+        // If export failed, fall through to return inline (with warning)
+      }
+
+      // Return inline (either requested or export failed)
+      // Convert ParsedMessage to SearchResult format
+      const searchResults = parsedMessages.map((parsed) => {
         const result: SearchResult = {
           id: parsed.id,
           threadId: parsed.threadId,
@@ -162,9 +206,9 @@ export default class SearchMessagesTool extends MCPTool {
       return {
         success: true,
         query: input.query,
-        count: parsedMessages.length,
-        resultCount: `${parsedMessages.length} of ${searchResponse.data.resultSizeEstimate || messages.length}`,
-        messages: parsedMessages,
+        count: searchResults.length,
+        resultCount: `${searchResults.length} of ${searchResponse.data.resultSizeEstimate || messages.length}`,
+        messages: searchResults,
       };
     } catch (error) {
       const gmailError = handleGmailError(error);
