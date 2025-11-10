@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
 
-# Build output
+# Build output (includes commercial bundles)
 /dist/
 
 # Environment variables
