@@ -63,7 +63,6 @@ const server = new MCPServer({
 const serverAny = server as any;
 
 // Override the loadTools method to return our bundled tools instead of loading from filesystem
-const originalLoadTools = serverAny.toolLoader.loadTools.bind(serverAny.toolLoader);
 serverAny.toolLoader.loadTools = async () => {
   return tools;
 };
@@ -74,7 +73,6 @@ serverAny.toolLoader.hasTools = async () => {
 };
 
 // Override the loadResources method to return our bundled resources
-const originalLoadResources = serverAny.resourceLoader.loadResources.bind(serverAny.resourceLoader);
 serverAny.resourceLoader.loadResources = async () => {
   return resources;
 };
